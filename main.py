@@ -1,20 +1,10 @@
-import robloxpy
-import requests
+from roblox import Client
+client = Client()
+import asyncio
 
-def user(): 
-    userID = input("Enter a Valid UserID:")
-    print(robloxpy.User.External.CreationDate(userID))
-    print(robloxpy.User.External.GetUserName(userID))
-
-def server():
-    print
-
-def main():
-    answer = input("User or Game: ")
-    if answer == "u":
-        user()
-    elif answer == "g":
-        server()
-    else: 
-        print("Invalid!")
-main()
+async def main():
+   userID = input("Input a userID:")
+   user = await client.get_user(userID)
+   print ("Display:", user.display_name)
+   
+asyncio.get_event_loop().run_until_complete(main())
