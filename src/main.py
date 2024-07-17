@@ -1,5 +1,6 @@
 from roblox import Client
 from roblox.utilities.exceptions import UserNotFound
+from roblox.utilities.exceptions import Unauthorized
 import json
 import asyncio
 
@@ -23,10 +24,18 @@ async def readToken():
       print("Logged in as:", user.name)
       print("Followers count:",  await user.get_follower_count())
       print ("Friend count:", await user.get_friend_count())
+   try:
+      premCheck = await user.has_premium()
+      print ("Does user have Premium:", premCheck)
+   except Unauthorized:
+      print("Unauth Error!")
       
+
+
 async def noToken():
    while True:
       data = input("Put a Username:")
+      
       try:
          user = await client.get_user_by_username(data)
          print("Followers count:",  await user.get_follower_count())
@@ -34,7 +43,6 @@ async def noToken():
 
       except UserNotFound:
          print("Invalid Username!")
-      
 
    
    
