@@ -1,21 +1,21 @@
-from roblox import Client
-from roblox.utilities.exceptions import UserNotFound
-from roblox.utilities.exceptions import Unauthorized
 import json
 import asyncio
-
+from roblox import Client
 client = Client()
+from roblox.utilities.exceptions import UserNotFound
+from roblox.utilities.exceptions import Unauthorized
 
 async def main():
-   answer = input("Would you like to put your roblox token:")
-   if answer.lower() == "y":
-    await readToken()
-   elif answer.lower() == "n":
-      await noToken()
-   else: 
-      print("Invalid.")
+      answer = input("Would you like to check your roblox token:")
+      if answer.lower() == "y":
+         await groupReading()
+      elif answer.lower() == "n":
+         await noToken()
+      else: 
+         print("Invalid.")
 
 async def readToken():
+   # Reads token from config, then gets who the token is.
    with open("config.json", "r") as file:
       config_data = json.load(file) 
       robloToken = config_data["token"]
@@ -29,7 +29,22 @@ async def readToken():
       print ("Does user have Premium:", premCheck)
    except Unauthorized:
       print("Unauth Error!")
-      
+
+
+async def groupReading():
+   groupID = input("Put a group ID:")
+   group = await client.get_group(groupID)
+
+async def groupReadingToken(robloToken):
+   answer = input("Do you own this group:")
+   if answer.lower == "y":
+      client.set_token(robloToken)
+      user = await client.get_authenticated_user()
+      print(await user.get_group_roles())
+      groupID = input("Put group ID.")
+      group = await client.get_group(groupID)
+   elif answer.lower == "n":
+      await groupReading()
 
 
 async def noToken():
