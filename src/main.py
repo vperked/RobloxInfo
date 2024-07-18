@@ -8,7 +8,7 @@ from roblox.utilities.exceptions import Unauthorized
 async def main():
       answer = input("Would you like to check your roblox token:")
       if answer.lower() == "y":
-         await groupReading()
+        await readToken()
       elif answer.lower() == "n":
          await noToken()
       else: 
@@ -28,7 +28,18 @@ async def readToken():
       premCheck = await user.has_premium()
       print ("Does user have Premium:", premCheck)
    except Unauthorized:
-      print("Unauth Error!")
+      print("Unauth")
+   await question(robloToken)
+
+async def question(robloToken):
+   print("if you have no token but would like to enter, please put nt.")
+   answer = input ("To enter the group section with this token, enter y:")
+   if answer.lower() == "y":
+      await groupReadingToken(robloToken)
+   elif answer.lower() == "nt":
+      await groupReading()
+   else:
+      print("Invalid!")
 
 
 async def groupReading():
@@ -36,16 +47,12 @@ async def groupReading():
    group = await client.get_group(groupID)
 
 async def groupReadingToken(robloToken):
-   answer = input("Do you own this group:")
-   if answer.lower == "y":
-      client.set_token(robloToken)
-      user = await client.get_authenticated_user()
-      print(await user.get_group_roles())
-      groupID = input("Put group ID.")
-      group = await client.get_group(groupID)
-   elif answer.lower == "n":
-      await groupReading()
-
+   while True:
+         client.set_token(robloToken)
+         user = await client.get_authenticated_user()
+         print(await user.get_group_roles())
+         groupID = input("Put group ID:")
+         group = await client.get_group(groupID)
 
 async def noToken():
    while True:
@@ -58,7 +65,5 @@ async def noToken():
 
       except UserNotFound:
          print("Invalid Username!")
-
-   
    
 asyncio.run(main())
