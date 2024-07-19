@@ -24,6 +24,7 @@ async def readToken():
       print("Logged in as:", user.name)
       print("Followers count:",  await user.get_follower_count())
       print ("Friend count:", await user.get_friend_count())
+      print("RAP:", await user.get_currency())
    try:
       premCheck = await user.has_premium()
       print ("Does user have Premium:", premCheck)
@@ -50,9 +51,10 @@ async def groupReadingToken(robloToken):
    while True:
          client.set_token(robloToken)
          user = await client.get_authenticated_user()
-         print(await user.get_group_roles())
+      
          groupID = input("Put group ID:")
          group = await client.get_group(groupID)
+         print(group.owner)
 
 async def noToken():
    while True:
